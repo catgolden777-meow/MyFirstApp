@@ -2,9 +2,9 @@
 
    on:
      push:
-       branches: [ "День 2" ]
+       branches: [ "Day-2" ]
      pull_request:
-       branches: [ "День 2" ]
+       branches: [ "Day-2" ]
 
    jobs:
      build:
