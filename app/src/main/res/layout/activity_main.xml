@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_light"
     tools:context=".MainActivity">
 
     <TextView
@@ -12,22 +13,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Студент: Редкозубов Группа: 3.2.ИСиП-2"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        android:textColor="@color/text_primary"
+        android:textSize="@dimen/text_size_title"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/textViewStudent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.054" />
+        android:layout_marginTop="@dimen/margin_standard"/>
 
     <TextView
+        android:id="@+id/textViewStudent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Моё первое приложение"
+        android:textColor="@color/text_secondary"
+        android:textSize="@dimen/text_size_body"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.029" />
+        android:layout_margin="@dimen/margin_standard"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RDA7773.2-2</string>
+    <string name="main_text">My First Application</string>
+    <string name="student_info">Student: Redk dan\n Group: 3.2ISaP-2</string>
 </resources>
