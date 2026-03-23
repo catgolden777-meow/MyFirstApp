@@ -1,6 +1,7 @@
 package com.example.rda77732_2.adapter
 
 import androidx.recyclerview.widget.RecyclerView
+import com.example.rda77732_2.R
 import com.example.rda77732_2.databinding.CardPostBinding
 import com.example.rda77732_2.dto.Post
 import java.text.DecimalFormat
@@ -43,7 +44,7 @@ class PostViewHolder(
                 android.widget.Toast.makeText(
                     itemView.context,
                     "Меню поста ${post.id}",
-                    android.widget.Toast.SHORT
+                    android.widget.Toast.LENGTH_SHORT
                 ).show()
             }
 
@@ -51,7 +52,7 @@ class PostViewHolder(
                 android.widget.Toast.makeText(
                     itemView.context,
                     "Профиль автора ${post.author}",
-                    android.widget.Toast.SHORT
+                    android.widget.Toast.LENGTH_SHORT
                 ).show()
             }
         }
