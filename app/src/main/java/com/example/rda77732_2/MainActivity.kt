@@ -1,152 +1,68 @@
 package com.example.rda77732_2
 
-import android.content.Intent
-import android.os.Bundle
-import android.view.View
-import android.widget.Toast
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
-import com.example.rda77732_2.activity.EditPostContract
-import com.example.rda77732_2.adapter.OnPostInteractionListener
-import com.example.rda77732_2.adapter.PostsAdapter
-import com.example.rda77732_2.databinding.ActivityMainBinding
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.rda77732_2.dto.Post
-import com.example.rda77732_2.viewmodel.PostViewModel
+import com.example.rda77732_2.repository.PostRepository
+import com.example.rda77732_2.repository.PostRepositoryFileImpl  // или другую реализацию
 
-class MainActivity : AppCompatActivity() {
+class PostViewModel(application: Application) : AndroidViewModel(application) {
 
-    private lateinit var binding: ActivityMainBinding
-    private val viewModel: PostViewModel by viewModels()
+    // Используем файловую реализацию с передачей контекста приложения
+    private val repository: PostRepository = PostRepositoryFileImpl(application)
 
-    // ID поста, который редактируется (0 = новый пост)
-    private var editingPostId: Long = 0L
+    val data: LiveData<List<Post>> = repository.getAll()
 
-    private val interactionListener = object : OnPostInteractionListener {
-        override fun onLike(post: Post) {
-            viewModel.likeById(post.id)
-        }
+    private val empty = Post(
+        id = 0,
+        author = "",
+        content = "",
+        published = ""
+    )
 
-        override fun onShare(post: Post) {
-            // Создаем Intent для отправки текста
-            val shareIntent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, post.content)
-                type = "text/plain"
+    private val _edited = MutableLiveData(empty)
+    val edited: LiveData<Post> = _edited
+
+    private val _editingMode = MutableLiveData(false)
+    val editingMode: LiveData<Boolean> = _editingMode
+
+    fun likeById(id: Long) = repository.likeById(id)
+    fun shareById(id: Long) = repository.shareById(id)
+    fun increaseViews(id: Long) = repository.increaseViews(id)
+    fun removeById(id: Long) = repository.removeById(id)
+
+    fun save() {
+        _edited.value?.let { post ->
+            if (post.content.isNotBlank()) {
+                repository.save(post)
             }
-
-            // Создаем Chooser с заголовком
-            val chooserIntent = Intent.createChooser(shareIntent, getString(R.string.share_post_via))
-            startActivity(chooserIntent)
-
-            // Увеличиваем счетчик репостов
-            viewModel.shareById(post.id)
         }
-
-
-        override fun onEdit(post: Post) {
-            // Запускаем редактирование существующего поста с текстом
-            editPostLauncher.launch(post.content)
-        }
-
-
-        override fun onRemove(post: Post) {
-            viewModel.removeById(post.id)
-            Toast.makeText(this@MainActivity, "Пост удален", Toast.LENGTH_SHORT).show()
-        }
-
-        override fun onAvatarClick(post: Post) {
-            Toast.makeText(this@MainActivity, "Профиль: ${post.author}", Toast.LENGTH_SHORT).show()
-            viewModel.increaseViews(post.id)
-        }
+        _edited.value = empty
+        _editingMode.value = false
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    fun edit(post: Post) {
+        _edited.value = post
+        _editingMode.value = true
+    }
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        // Настройка адаптера
-        val adapter = PostsAdapter(interactionListener)
-        binding.list.adapter = adapter
-
-        // Наблюдение за списком постов
-        viewModel.data.observe(this) { posts ->
-            adapter.submitList(posts)
-        }
-
-        // Отслеживание изменений текста от пользователя
-        binding.content.addTextChangedListener { text ->
-            // Обновляем ViewModel при изменении текста пользователем
-            viewModel.changeContent(text.toString())
-        }
-
-        // Кнопка сохранения
-        binding.save.setOnClickListener {
-            val text = binding.content.text.toString()
-            if (text.isBlank()) {
-                Toast.makeText(this, "Введите текст поста", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+    fun changeContent(content: String) {
+        val text = content.trim()
+        _edited.value?.let { post ->
+            if (post.content != text) {
+                _edited.value = post.copy(content = text)
             }
-
-            // Если редактируем существующий пост
-            if (editingPostId != 0L) {
-                // Получаем текущий пост из ViewModel, обновляем его контент и сохраняем
-                viewModel.saveEditedPost(editingPostId, text)
-                editingPostId = 0L
-            } else {
-                // Создаем новый пост
-                viewModel.changeContent(text)
-                viewModel.save()
-            }
-
-            // Очищаем поле ввода
-            binding.content.text.clear()
-            // Скрываем панель отмены
-            binding.cancelGroup.visibility = View.GONE
-            // Скрываем клавиатуру
-            hideKeyboard(binding.content)
-        }
-
-        // Кнопка отмены редактирования
-        binding.cancel.setOnClickListener {
-            // Очищаем ID редактируемого поста
-            editingPostId = 0L
-            // Очищаем поле ввода
-            binding.content.text.clear()
-            // Скрываем панель отмены
-            binding.cancelGroup.visibility = View.GONE
-            // Скрываем клавиатуру
-            hideKeyboard(binding.content)
-            // Отменяем редактирование в ViewModel
-            viewModel.cancelEdit()
-        }
-        binding.fab.setOnClickListener {
-            // Запускаем создание нового поста
-            editPostLauncher.launch(null)  // null означает создание нового
-        }
-
-    }
-
-    private fun hideKeyboard(view: View) {
-        val imm = getSystemService(INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
-    }
-
-    private fun showKeyboard(view: View) {
-        val imm = getSystemService(INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
-        imm.showSoftInput(view, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
-    }
-    private val editPostLauncher = registerForActivityResult(EditPostContract()) { result ->
-        if (!result.isNullOrBlank()) {
-            // Получен текст отредактированного/нового поста
-            viewModel.changeContent(result)
-            viewModel.save()
         }
     }
 
+    fun cancelEdit() {
+        _edited.value = empty
+        _editingMode.value = false
+    }
 }
+
 
 
 
