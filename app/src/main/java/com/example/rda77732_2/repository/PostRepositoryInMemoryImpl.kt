@@ -20,14 +20,15 @@ class PostRepositoryInMemoryImpl : PostRepository {
     private var posts = listOf(
         Post(
             id = 1,
-            author = "Нетология. Университет интернет-профессий",
+            author = "Страшные ситуации. Блоги путешественников",
             authorId = 2,
-            content = "Привет, это новая Нетология! Когда-то Нетология начиналась с интенсивов по онлайн-маркетингу. Затем появились курсы по дизайну, разработке, аналитике и управлению.",
-            published = "21 мая в 18:36",
+            content = "Бездомный напал на бедного иностранца и дрался с ним за место у парковки.",
+            published = "11 сентебря в 16:56",
             likedByMe = false,
-            likes = 999,
-            shares = 25,
-            views = 5700
+            likes = 2999,
+            shares = 365,
+            views = 4500000,
+            video = "https://vk.com/video255988563_170709657?ysclid=mn62022vg3313574125"
         ),
         Post(
             id = 2,
