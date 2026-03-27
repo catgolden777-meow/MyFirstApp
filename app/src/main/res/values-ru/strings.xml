@@ -33,5 +33,6 @@
     <string name="error_cannot_open_video">Не удалось открыть видео</string>
 
     <string name="share_post_via">Поделиться через</string>
+    <string name="post_removed">Пост удалён</string>
 
 </resources>

@@ -41,7 +41,11 @@ class PostViewHolder(
                 videoContainer.removeAllViews()
 
                 // Инфлейтим layout видео
-                val videoBinding = ItemVideoBinding.inflate(LayoutInflater.from(itemView.context), videoContainer, true)
+                val videoBinding = ItemVideoBinding.inflate(
+                    LayoutInflater.from(itemView.context),
+                    videoContainer,
+                    true
+                )
 
                 // Устанавливаем текст видео (можно показать короткую ссылку)
                 videoBinding.videoUrl.text = post.video
@@ -61,10 +65,40 @@ class PostViewHolder(
             menu.setOnClickListener { view ->
                 showPopupMenu(view, post)
             }
+            // Обработка клика на всю карточку (кроме интерактивных элементов)
+            root.setOnClickListener {
+                listener.onPostClick(post)
+            }
+
+            // Обработчики для интерактивных элементов должны вызывать stopPropagation
+            // чтобы не срабатывал клик на root
+            like.setOnClickListener {
+                listener.onLike(post)
+                it.stopPropagation()  // предотвращаем всплытие события
+            }
+
+            share.setOnClickListener {
+                listener.onShare(post)
+                it.stopPropagation()
+            }
+
+            avatar.setOnClickListener {
+                listener.onAvatarClick(post)
+                it.stopPropagation()
+            }
+
+            menu.setOnClickListener { view ->
+                showPopupMenu(view, post)
+                // menu не должен вызывать onPostClick
+            }
         }
     }
 
 
+    fun View.stopPropagation() {
+        isClickable = true
+        setOnClickListener { /* пустой обработчик, чтобы перехватить событие */ }
+    }
 
 
     private fun showPopupMenu(anchor: View, post: Post) {
@@ -79,10 +113,12 @@ class PostViewHolder(
                         listener.onEdit(post)
                         true
                     }
+
                     R.id.remove -> {
                         listener.onRemove(post)
                         true
                     }
+
                     else -> false
                 }
             }
@@ -100,6 +136,7 @@ class PostViewHolder(
                     DecimalFormat(".").format(millions) + "M"
                 }
             }
+
             count >= 10_000 -> "${count / 1000}K"
             count >= 1_000 -> {
                 val thousands = count / 1000.0
@@ -109,9 +146,11 @@ class PostViewHolder(
                     DecimalFormat(".").format(thousands) + "K"
                 }
             }
+
             else -> count.toString()
         }
     }
+
     private fun openVideo(videoUrl: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl))
 
@@ -131,12 +170,16 @@ class PostViewHolder(
             if (intent.resolveActivity(itemView.context.packageManager) != null) {
                 itemView.context.startActivity(intent)
             } else {
-                Toast.makeText(itemView.context, R.string.error_no_video_app, Toast.LENGTH_SHORT).show()
+                Toast.makeText(itemView.context, R.string.error_no_video_app, Toast.LENGTH_SHORT)
+                    .show()
             }
         } catch (e: Exception) {
-            Toast.makeText(itemView.context, R.string.error_cannot_open_video, Toast.LENGTH_SHORT).show()
+            Toast.makeText(itemView.context, R.string.error_cannot_open_video, Toast.LENGTH_SHORT)
+                .show()
         }
+
     }
 }
+
 
 
