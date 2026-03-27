@@ -17,55 +17,27 @@ class PostRepositoryInMemoryImpl : PostRepository {
     private val currentUserId = 1L
     private val currentUserName = "Я"
 
+
+    // Исходные данные
     private var posts = listOf(
         Post(
             id = 1,
-            author = "Страшные ситуации. Блоги путешественников",
+            author = "страйкбольный клуб",
             authorId = 2,
-            content = "Бездомный напал на бедного иностранца и дрался с ним за место у парковки.",
-            published = "11 сентебря в 16:56",
+            content = "В продаже новые пули с краской цвета крови",
+            published = "Сегодня в 20:45",
             likedByMe = false,
-            likes = 2999,
-            shares = 365,
-            views = 4500000,
-            video = "https://vk.com/video255988563_170709657?ysclid=mn62022vg3313574125"
-        ),
-        Post(
-            id = 2,
-            author = "Android Dev",
-            authorId = 3,
-            content = "Вышел новый релиз Android Studio! Теперь с поддержкой Gemini AI и улучшенным композером.",
-            published = "22 мая в 10:15",
-            likedByMe = false,
-            likes = 342,
-            shares = 89,
-            views = 2300
-        ),
-        Post(
-            id = 3,
-            author = "Kotlin Weekly",
-            authorId = 4,
-            content = "Kotlin 2.0.0 released! Что нового в языке? Смотрим обновления компилятора и стандартной библиотеки.",
-            published = "23 мая в 09:42",
-            likedByMe = true,
-            likes = 1250,
-            shares = 420,
-            views = 8900
-        ),
-        Post(
-            id = 4,
-            author = "Google I/O",
-            authorId = 5,
-            content = "Анонсированы новые возможности для разработчиков: Compose UI, Wear OS 5, Android 15 Beta",
-            published = "20 мая в 20:00",
-            likedByMe = false,
-            likes = 5678,
-            shares = 1234,
-            views = 45000
+            likes = 9999,
+            shares = 25,
+            views = 5700,
+            video = "https://www.youtube.com/watch?v=S-eJJwvCVPQ"
         )
+
     )
 
     private val _data = MutableLiveData(posts)
+
+
 
     override fun getAll(): LiveData<List<Post>> = _data
 
@@ -105,7 +77,7 @@ class PostRepositoryInMemoryImpl : PostRepository {
         _data.value = posts
     }
 
-    override fun save(post: Post) {
+    override fun save(post: Post): Post {
         if (post.id == 0L) {
             // Создание нового поста
             val newPost = post.copy(
@@ -131,6 +103,7 @@ class PostRepositoryInMemoryImpl : PostRepository {
             }
         }
         _data.value = posts
+        return TODO("Provide the return value")
     }
 
     override fun removeById(id: Long) {
@@ -142,6 +115,5 @@ class PostRepositoryInMemoryImpl : PostRepository {
         val format = SimpleDateFormat("d MMM в HH:mm", Locale("ru"))
         return format.format(date)
     }
+
 }
-
-

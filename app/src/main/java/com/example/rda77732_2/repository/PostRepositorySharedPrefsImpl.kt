@@ -24,6 +24,7 @@ class PostRepositorySharedPrefsImpl(
     private val currentUserId = 1L
     private val currentUserName = "Я"
 
+
     private var posts = emptyList<Post>()
     private val _data = MutableLiveData(posts)
 
@@ -72,7 +73,7 @@ class PostRepositorySharedPrefsImpl(
         saveData()
     }
 
-    override fun save(post: Post) {
+    override fun save(post: Post): Post {
         posts = if (post.id == 0L) {
             val newPost = post.copy(
                 id = nextId++,
@@ -96,6 +97,7 @@ class PostRepositorySharedPrefsImpl(
         }
         _data.value = posts
         saveData()
+        return TODO("Provide the return value")
     }
 
     override fun removeById(id: Long) {
@@ -132,17 +134,16 @@ class PostRepositorySharedPrefsImpl(
         posts = listOf(
             Post(
                 id = nextId++,
-                author = "Нетология. Университет интернет-профессий",
+                author = "страйкбольный клуб",
                 authorId = 2,
-                content = "Привет, это новая Нетология! Когда-то Нетология начиналась...",
-                published = "21 мая в 18:36",
+                content = "В продаже новые пули с краской цвета крови",
+                published = "Сегодня в 20:45",
                 likedByMe = false,
-                likes = 999,
+                likes = 9999,
                 shares = 25,
                 views = 5700,
-                video = null
+                video = "https://www.youtube.com/watch?v=S-eJJwvCVPQ"
             )
-            // ... остальные посты
         )
         _data.value = posts
     }

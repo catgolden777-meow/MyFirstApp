@@ -78,7 +78,7 @@ class PostRepositoryFileImpl(
         saveData()
     }
 
-    override fun save(post: Post) {
+    override fun save(post: Post): Post {
         posts = if (post.id == 0L) {
             // Создание нового поста
             val newPost = post.copy(
@@ -104,6 +104,7 @@ class PostRepositoryFileImpl(
         }
         _data.value = posts
         saveData()
+        return TODO("Provide the return value")
     }
 
     override fun removeById(id: Long) {
@@ -146,7 +147,7 @@ class PostRepositoryFileImpl(
     }
 
 
-   // Сохранение данных в файл
+    //Сохранение данных в файл
 
     private fun saveData() {
         try {
@@ -164,46 +165,130 @@ class PostRepositoryFileImpl(
     private fun getPostsFile(): File = context.filesDir.resolve(filename)
 
 
-   // Создание начальных данных при первом запуске
+    //Создание начальных данных при первом запуске
 
     private fun createInitialData() {
         posts = listOf(
             Post(
                 id = generateNextId(),
-                author = "Нетология. Университет интернет-профессий",
+                author = "страйкбольный клуб",
                 authorId = 2,
-                content = "Привет, это новая Нетология! Когда-то Нетология начиналась с интенсивов по онлайн-маркетингу. Затем появились курсы по дизайну, разработке, аналитике и управлению.",
-                published = "21 мая в 18:36",
+                content = "В продаже новые пули с краской цвета крови",
+                published = "Сегодня в 20:45",
                 likedByMe = false,
-                likes = 999,
+                likes = 9999,
                 shares = 25,
                 views = 5700,
+                video = "https://www.youtube.com/watch?v=S-eJJwvCVPQ"
+            ),
+            Post(
+                id = generateNextId(),
+                author = "Страшные ситуации. Блоги путешествий",
+                authorId = 3,
+                content = "Бездомный напал на иностранца и дрался с ним за место у парковки.",
+                published = "Вчера в 22:10",
+                likedByMe = false,
+                likes = 15200,
+                shares = 340,
+                views = 8900,
+                video = null
+            ),
+            Post(
+                id = generateNextId(),
+                author = "Бесполезные товары",
+                authorId = 4,
+                content = "Вышел новый релиз чехла на тапочки.",
+                published = "2 дня назад в 14:30",
+                likedByMe = false,
+                likes = 7200,
+                shares = 120,
+                views = 4300,
+                video = null
+            ),
+            Post(
+                id = generateNextId(),
+                author = "Новости нижнего тагила",
+                authorId = 5,
+                content = "Преподователь уснул на теплотрассе и его приняли за бездомного.",
+                published = "5 дней назад в 11:15",
+                likedByMe = false,
+                likes = 11100,
+                shares = 210,
+                views = 6700,
+                video = null
+            ),
+            Post(
+                id = generateNextId(),
+                author = "Блоги сумашедшего",
+                authorId = 6,
+                content = "Сегодня будут раздаваться коробки с пропитанием из летающей тарелки.",
+                published = "Сегодня в 17:05",
+                likedByMe = false,
+                likes = 0,
+                shares = 1,
+                views = 6,
                 video = null
             ),
             Post(
                 id = generateNextId(),
                 author = "Android Dev",
-                authorId = 3,
+                authorId = 7,
                 content = "Вышел новый релиз Android Studio! Теперь с поддержкой Gemini AI и улучшенным композером.",
-                published = "22 мая в 10:15",
+                published = "3 дня назад в 19:20",
                 likedByMe = false,
-                likes = 342,
-                shares = 89,
-                views = 2300,
-                video = "https://www.youtube.com/watch?v=WhWc3b3KhnY"
+                likes = 18400,
+                shares = 460,
+                views = 11200,
+                video = null
             ),
             Post(
                 id = generateNextId(),
-                author = "Kotlin Weekly",
-                authorId = 4,
-                content = "Kotlin 2.0.0 released! Что нового в языке? Смотрим обновления компилятора и стандартной библиотеки.",
-                published = "23 мая в 09:42",
-                likedByMe = true,
-                likes = 1250,
-                shares = 420,
+                author = "Илон Масленников",
+                authorId = 8,
+                content = "Робот нового поколения отправляется искать призраков в заброшку на тесле.",
+                published = "Сегодня в 12:40",
+                likedByMe = false,
+                likes = 8900,
+                shares = 210,
+                views = 5100,
+                video = null
+            ),
+            Post(
+                id = generateNextId(),
+                author = "Вкусные рецепты",
+                authorId = 9,
+                content = "Когда я приготовила эту кашу из нефти все мои гости умерли от пищевого отравления.",
+                published = "Вчера в 23:10",
+                likedByMe = false,
+                likes = 13700,
+                shares = 380,
                 views = 8900,
                 video = null
-            )
+            ),
+            Post(
+                id = generateNextId(),
+                author = "Обстановка на юге",
+                authorId = 10,
+                content = "Дубайскую войну прошла молодая девушка которая работала в клубе где занимаются...",
+                published = "6 дней назад в 16:30",
+                likedByMe = false,
+                likes = 9500,
+                shares = 210,
+                views = 6200,
+                video = null
+            ),
+            Post(
+                id = generateNextId(),
+                author = "Нелегальные застройки",
+                authorId = 11,
+                content = "Молодой человек поселился жить в гараже и умер от выхлопных газов в закрытом помещении.",
+                published = "Вчера в 10:00",
+                likedByMe = false,
+                likes = 4100,
+                shares = 160,
+                views = 2800,
+                video = null
+            ),
         )
         _data.value = posts
     }
